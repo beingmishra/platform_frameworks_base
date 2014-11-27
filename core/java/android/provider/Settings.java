@@ -7978,14 +7978,17 @@ public final class Settings {
                 "packages_to_clear_data_before_full_restore";
 
         /**
-         * Whether to set a lower brightness level when enabling night mode
-         * 0: Disabled
-         * 1: Set the brightness to a very low value
-         * 2: Set the brightness to a low value
-         * 3: Set the brightness to a medium value
+         * Display style of the status bar battery information
+         * 0: Display the battery an icon in portrait mode
+         * 1: Display the battery as a circle
+         * default: 0
          * @hide
          */
-        public static final String NIGHT_BRIGHTNESS_VALUE = "night_brightness_value";
+        public static final String STATUS_BAR_BATTERY_STYLE = "status_bar_battery_style";
+
+        /** @hide */
+        public static final Validator STATUS_BAR_BATTERY_STYLE_VALIDATOR =
+                new SettingsValidators.InclusiveIntegerRangeValidator(0, 1);
 
         /**
          * This are the settings to be backed up.
@@ -8088,6 +8091,7 @@ public final class Settings {
             VOLUME_HUSH_GESTURE,
             MANUAL_RINGER_TOGGLE_COUNT,
             HUSH_GESTURE_USED,
+            STATUS_BAR_BATTERY_STYLE
         };
 
         /**
@@ -8234,6 +8238,7 @@ public final class Settings {
                     ENABLED_NOTIFICATION_POLICY_ACCESS_PACKAGES_VALIDATOR); //legacy restore setting
             VALIDATORS.put(HUSH_GESTURE_USED, HUSH_GESTURE_USED_VALIDATOR);
             VALIDATORS.put(MANUAL_RINGER_TOGGLE_COUNT, MANUAL_RINGER_TOGGLE_COUNT_VALIDATOR);
+            VALIDATORS.put(STATUS_BAR_BATTERY_STYLE, STATUS_BAR_BATTERY_STYLE_VALIDATOR);
         }
 
         /**
