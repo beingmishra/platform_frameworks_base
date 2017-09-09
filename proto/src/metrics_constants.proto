@@ -6435,6 +6435,7 @@ message MetricsEvent {
     // END OF AOSP CONSTANTS
 
     // SHELL Metrics
-    SHELL = 9999;
+    SHELL = 2500;
+    PEARL = 3000;
   }
 }
