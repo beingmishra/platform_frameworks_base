@@ -556,11 +556,6 @@ public interface WindowManagerPolicy extends WindowManagerPolicyConstants {
         public int getLidState();
 
         /**
-         * Send some ActionHandler commands to WindowManager.
-         */
-        void sendCustomAction(Intent intent);
-
-        /**
          * Lock the device now.
          */
         public void lockDeviceNow();
@@ -1587,6 +1582,11 @@ public interface WindowManagerPolicy extends WindowManagerPolicyConstants {
      * Specifies whether there is an on-screen navigation bar separate from the status bar.
      */
     public boolean hasNavigationBar();
+
+    /**
+     * Send some ActionHandler commands to WindowManager.
+     */
+    public void sendCustomAction(Intent intent);
 
     /**
      * Lock the device now.

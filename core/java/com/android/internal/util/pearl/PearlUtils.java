@@ -17,29 +17,50 @@
 
 package com.android.internal.util.pearl;
 
+import android.app.ActivityManager;
+import android.app.AlertDialog; 
+import android.app.IActivityManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.pm.PackageManager;
-import android.hardware.input.InputManager;
 import android.graphics.Color;
-import android.content.res.Resources;
+import android.hardware.fingerprint.FingerprintManager;
+import android.hardware.input.InputManager;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.Manifest;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.BatteryManager;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemClock;
+import android.os.SystemProperties;
 import android.os.UserHandle;
+import android.os.Vibrator;
 import android.net.ConnectivityManager;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.view.InputDevice;
 import android.view.IWindowManager;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.WindowManagerGlobal;
 
+import java.util.List;
+import java.util.Locale;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
+
+import com.android.internal.R;
 import com.android.internal.statusbar.IStatusBarService;
 
 /**
@@ -88,15 +109,6 @@ public class PearlUtils {
                         InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
             }
         }, 20);
-    }
-
-    public static void takeScreenshot(boolean full) {
-        IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
-        try {
-            wm.sendCustomAction(new Intent(full? INTENT_SCREENSHOT : INTENT_REGION_SCREENSHOT));
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
     }
 
     private static final class FireActions {
@@ -152,5 +164,14 @@ public class PearlUtils {
         newColor[2] = empty[2] + ((full[2]-empty[2])*blendFactor);
         int newAlpha = (int) (emptyAlpha + ((fullAlpha-emptyAlpha)*blendFactor));
         return Color.HSVToColor(newAlpha, newColor);
+    }
+
+    public static void takeScreenshot(boolean full) {
+        IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
+        try {
+            wm.sendCustomAction(new Intent(full? INTENT_SCREENSHOT : INTENT_REGION_SCREENSHOT));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }
