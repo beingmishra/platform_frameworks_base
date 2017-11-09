@@ -53,6 +53,7 @@ import com.android.internal.app.IBatteryStats;
 import com.android.server.LocalServices;
 import com.android.server.am.BatteryStatsService;
 import com.android.server.policy.WindowManagerPolicy;
+import com.android.server.lights.LightsManager;
 
 import java.io.PrintWriter;
 

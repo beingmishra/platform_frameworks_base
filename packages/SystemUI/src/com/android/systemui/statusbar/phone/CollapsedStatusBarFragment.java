@@ -18,6 +18,8 @@ import static android.app.StatusBarManager.DISABLE_CLOCK;
 import static android.app.StatusBarManager.DISABLE_NOTIFICATION_ICONS;
 import static android.app.StatusBarManager.DISABLE_SYSTEM_INFO;
 
+import android.util.Log;
+import android.provider.Settings;
 import android.annotation.Nullable;
 import android.app.Fragment;
 import android.app.StatusBarManager;
@@ -25,6 +27,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.os.Parcelable;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -33,6 +38,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ImageSwitcher;
 import android.widget.LinearLayout;
+import android.widget.ImageView;
 
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
