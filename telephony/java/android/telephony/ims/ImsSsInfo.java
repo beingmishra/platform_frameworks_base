@@ -41,8 +41,6 @@ public final class ImsSsInfo implements Parcelable {
     public static final int SERVICE_NOT_PROVISIONED = 0;
     /** @hide */
     public static final int SERVICE_PROVISIONED = 1;
-    /** @hide */
-    public static final int SERVICE_PROVISIONING_UNKNOWN = -1;
 
     // 0: disabled, 1: enabled
     /** @hide */
@@ -52,7 +50,7 @@ public final class ImsSsInfo implements Parcelable {
     // TODO: Make private, do not modify this field directly, use getter!
     public String mIcbNum;
     /** @hide */
-    public int mProvisionStatus = SERVICE_PROVISIONING_UNKNOWN;
+    public int mProvisionStatus;
 
     /**@hide*/
     // TODO: Remove! Do not use this constructor, instead use public version.
