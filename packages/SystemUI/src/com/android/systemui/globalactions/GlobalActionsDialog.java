@@ -439,7 +439,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener,
             } else if (GLOBAL_ACTION_KEY_LOCKDOWN.equals(actionKey)) {
                 if (Settings.Secure.getIntForUser(mContext.getContentResolver(),
                             Settings.Secure.LOCKDOWN_IN_POWER_MENU, 0, getCurrentUser().id) != 0
-                        && shouldDisplayLockdown()) {
+                        && shouldDisplayLockdown() && !isInLockTaskMode()) {
                     mItems.add(getLockdownAction());
                     mHasLockdownButton = true;
                 }
@@ -454,7 +454,8 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener,
                 }
             } else if (GLOBAL_ACTION_KEY_SCREENSHOT.equals(actionKey)) {
                 if (Settings.Secure.getIntForUser(mContext.getContentResolver(),
-                            Settings.Secure.SCREENSHOT_IN_POWER_MENU, 1, getCurrentUser().id) != 0) {
+                            Settings.Secure.SCREENSHOT_IN_POWER_MENU, 1, getCurrentUser().id) != 0
+                        && !isInLockTaskMode()) {
                     mItems.add(new ScreenshotAction());
                 }
             /*} else if (GLOBAL_ACTION_KEY_LOGOUT.equals(actionKey)) {
@@ -466,7 +467,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener,
             } else if (GLOBAL_ACTION_KEY_ADVANCED.equals(actionKey)) {
                 if (Settings.Secure.getIntForUser(mContext.getContentResolver(),
                             Settings.Secure.ADVANCED_REBOOT_IN_POWER_MENU, 0,
-                            getCurrentUser().id) != 0) {
+                            getCurrentUser().id) != 0 && !isInLockTaskMode()) {
                     mItems.add(mShowAdvancedToggles);
                 }
             } else {
@@ -1765,6 +1766,14 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener,
             }
         } catch (RemoteException e) {
             Log.e(TAG, "failure trying to perform hot reboot", e);
+        }
+    }
+
+    private boolean isInLockTaskMode() {
+        try {
+            return ActivityManagerNative.getDefault().isInLockTaskMode();
+        } catch (RemoteException e) {
+            return false;
         }
     }
 }
