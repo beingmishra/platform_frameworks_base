@@ -4591,6 +4591,9 @@ public final class Settings {
         private static final Validator STATUS_BAR_TICKER_TICK_DURATION_VALIDATOR =
                 ANY_INTEGER_VALIDATOR;
 
+        /** @hide */
+        public static final String AUDIO_PANEL_VIEW_POSITION = "audio_panel_view_position";
+
         /**
          * 0 - Default
          * 1 - Round with ring
