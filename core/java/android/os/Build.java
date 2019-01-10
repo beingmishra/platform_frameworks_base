@@ -944,6 +944,10 @@ public class Build {
     /** Comma-separated tags describing the build, like "unsigned,debug". */
     public static final String TAGS = getString("ro.build.tags");
 
+    /** @hide */
+    public static final String PEARL_FINGERPRINT = SystemProperties.get("ro.pearl.fingerprint",
+            deriveFingerprint());
+
     /** A string that uniquely identifies this build.  Do not attempt to parse this value. */
     public static final String FINGERPRINT = deriveFingerprint();
 
