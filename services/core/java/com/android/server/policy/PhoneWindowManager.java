@@ -4247,7 +4247,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             final int keyCode = event.getKeyCode();
             final int metaState = event.getMetaState();
             final boolean initialDown = event.getAction() == KeyEvent.ACTION_DOWN
-                    && event.getRepeatCount() == 0;
+                && event.getRepeatCount() == 0
+                && !isHwKeysDisabled();
 
             // Check for fallback actions specified by the key character map.
             final FallbackAction fallbackAction;
@@ -6095,6 +6096,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         setHdmiPlugged(!mHdmiPlugged);
     }
 
+
+    private boolean isHwKeysDisabled() {
+        return mKeyHandler != null ? mKeyHandler.isHwKeysDisabled() : false;
+    }
 
     /** {@inheritDoc} */
     @Override
