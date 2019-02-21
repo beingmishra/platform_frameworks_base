@@ -22,11 +22,4 @@
     <!-- Whether safe headphone volume warning dialog is disabled on Vol+ (operator specific). -->
     <bool name="config_safe_media_disable_on_volume_up">false</bool>
 
-  <!-- Auto fill -->
-  <java-symbol type="color" name="autofill_save_title_color" />
-  <java-symbol type="color" name="autofill_autofill_save_custom_subtitle_color" />
-
-  <!-- Settings icon tint color -->
-  <java-symbol type="color" name="settings_icon_tint_color" />
-
 </resources>
