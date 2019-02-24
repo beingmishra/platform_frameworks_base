@@ -78,7 +78,7 @@ public class RebootTile extends QSTileImpl<BooleanState> {
     @Override
     protected void handleUpdateState(BooleanState state, Object arg) {
         if (mRebootToRecovery) {
-            state.label = mContext.getString(R.string.global_action_reboot_recovery);
+            state.label = mContext.getString(R.string.global_action_restart_recovery);
             state.icon = ResourceIcon.get(R.drawable.ic_qs_reboot_recovery);
         } else {
             state.label = mContext.getString(R.string.global_action_reboot);
