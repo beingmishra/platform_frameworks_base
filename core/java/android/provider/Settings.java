@@ -4451,6 +4451,15 @@ public final class Settings {
                 "double_tap_sleep_lockscreen";
 
         /**
+         * Weather lockscreen temperature scale
+         * @hide
+         */
+        public static final String WEATHER_LOCKSCREEN_UNIT = "weather_lockscreen_unit";
+         /** @hide */
+        private static final Validator WEATHER_LOCKSCREEN_UNIT_VALIDATOR =
+               BOOLEAN_VALIDATOR;
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
@@ -4531,7 +4540,8 @@ public final class Settings {
             BATTERY_LIGHT_BLEND_FULL_COLOR,
             BATTERY_LIGHT_BLEND_EMPTY_COLOR,
             BATTERY_LIGHT_BLEND_REVERSE,
-            NOTIFICATION_LIGHT_PULSE
+            NOTIFICATION_LIGHT_PULSE,
+            WEATHER_LOCKSCREEN_UNIT,
         };
 
         /**
@@ -4666,6 +4676,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(BATTERY_LIGHT_BLEND_FULL_COLOR);
             PRIVATE_SETTINGS.add(BATTERY_LIGHT_BLEND_EMPTY_COLOR);
             PRIVATE_SETTINGS.add(BATTERY_LIGHT_BLEND_REVERSE);
+            PRIVATE_SETTINGS.add(WEATHER_LOCKSCREEN_UNIT);
         }
 
         /**
@@ -4776,6 +4787,7 @@ public final class Settings {
             VALIDATORS.put(BATTERY_LIGHT_BLEND_EMPTY_COLOR, BATTERY_LIGHT_BLEND_EMPTY_COLOR_VALIDATOR);
             VALIDATORS.put(BATTERY_LIGHT_BLEND_REVERSE, BATTERY_LIGHT_BLEND_REVERSE_VALIDATOR);
             VALIDATORS.put(NOTIFICATION_LIGHT_PULSE, BOOLEAN_VALIDATOR);
+            VALIDATORS.put(WEATHER_LOCKSCREEN_UNIT, WEATHER_LOCKSCREEN_UNIT_VALIDATOR);
         }
 
         /**
