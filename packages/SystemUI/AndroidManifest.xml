@@ -51,6 +51,9 @@
     <uses-permission android:name="android.permission.GET_APP_OPS_STATS" />
     <uses-permission android:name="android.permission.USE_RESERVED_DISK" />
 
+    <!-- Weather on lockscreen -->
+    <uses-permission android:name="org.pixelexperience.weather.client.READ_WEATHER" />
+
     <!-- Networking and telephony -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />

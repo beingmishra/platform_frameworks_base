@@ -62,6 +62,7 @@ applications that come with the platform
         <permission name="android.permission.STOP_APP_SWITCHES"/>
         <permission name="com.android.voicemail.permission.READ_VOICEMAIL"/>
         <permission name="com.android.voicemail.permission.WRITE_VOICEMAIL"/>
+        <permission name="org.pixelexperience.weather.client.READ_WEATHER"/>
     </privapp-permissions>
 
     <privapp-permissions package="com.android.emergency">
