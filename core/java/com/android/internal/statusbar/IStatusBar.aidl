@@ -155,4 +155,6 @@ oneway interface IStatusBar
      *  Pearl
      */
     void toggleCameraFlash();
+
+    void toggleNavigationBar(boolean enable);
 }
