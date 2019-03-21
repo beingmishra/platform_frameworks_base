@@ -4696,11 +4696,12 @@ public class StatusBar extends SystemUI implements DemoMode,
 
     @Override
         public void onChange(boolean selfChange, Uri uri) {
+           super.onChange(selfChange, uri);
            if (uri.equals(Settings.System.getUriFor(
                     Settings.System.LESS_BORING_HEADS_UP))) {
                 setUseLessBoringHeadsUp();
             }
-           update();
+            update();
         }
 
         public void update() {
