@@ -4460,6 +4460,13 @@ public final class Settings {
                BOOLEAN_VALIDATOR;
 
         /**
+        /**
+         * Wheter to show heads up only for dialer and sms apps
+         * @hide
+         */
+        public static final String LESS_BORING_HEADS_UP = "less_boring_heads_up";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *

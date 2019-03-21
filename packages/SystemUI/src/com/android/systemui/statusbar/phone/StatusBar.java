@@ -815,6 +815,8 @@ public class StatusBar extends SystemUI implements DemoMode,
         Dependency.get(ActivityStarterDelegate.class).setActivityStarterImpl(this);
 
         Dependency.get(ConfigurationController.class).addCallback(this);
+
+        mPearlSettingsObserver.observe();
     }
 
     // ================================================================================
@@ -1986,6 +1988,10 @@ public class StatusBar extends SystemUI implements DemoMode,
             if (DEBUG) {
                 Log.d(TAG, "No peeking: disabled panel : " + sbn.getKey());
             }
+            return false;
+        }
+
+        if (mEntryManager.shouldSkipHeadsUp(sbn)) {
             return false;
         }
 
@@ -4683,15 +4689,23 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_LOCKSCREEN),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LESS_BORING_HEADS_UP),
+                    false, this, UserHandle.USER_ALL);
         }
 
     @Override
         public void onChange(boolean selfChange, Uri uri) {
-            update();
+           if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.LESS_BORING_HEADS_UP))) {
+                setUseLessBoringHeadsUp();
+            }
+           update();
         }
 
         public void update() {
            setLockscreenDoubleTapToSleep();
+           setUseLessBoringHeadsUp();
         }
     }
 
@@ -4699,6 +4713,13 @@ public class StatusBar extends SystemUI implements DemoMode,
         if (mStatusBarWindow != null) {
             mStatusBarWindow.setLockscreenDoubleTapToSleep();
         }
+    }
+
+    private void setUseLessBoringHeadsUp() {
+        boolean lessBoringHeadsUp = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.LESS_BORING_HEADS_UP, 0,
+                UserHandle.USER_CURRENT) == 1;
+        mEntryManager.setUseLessBoringHeadsUp(lessBoringHeadsUp);
     }
 
     public int getWakefulnessState() {
