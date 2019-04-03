@@ -2249,4 +2249,7 @@
 
     <!-- Shows when people have clicked on the custom lockscreen shortcut [CHAR LIMIT=60] -->
     <string name="custom_hint">Swipe from icon to launch</string>
+
+    <!-- Lockscreen Tuner -->
+    <string name="lockscreen_tuner_activity">Lockscreen shortcuts</string>
 </resources>
