@@ -2240,6 +2240,10 @@
          app for debugging. Will not be seen by users. [CHAR LIMIT=20] -->
     <string name="heap_dump_tile_name">Dump SysUI Heap</string>
 
-    <!-- Statusbae icon -->
+    <!-- Statusbar icon -->
     <string name="statusbar_items_title">Statusbar icon</string>
+
+    <!-- LockScreen Stuff -->
+    <string name="lockscreen_default">Default</string>
+    <string name="lockscreen_hidden">None</string>
 </resources>
