@@ -4177,22 +4177,6 @@ public class StatusBar extends SystemUI implements DemoMode,
         Trace.endSection();
     }
 
-    private void updateTickerAnimation() {
-        mTickerAnimationMode = Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.STATUS_BAR_TICKER_ANIMATION_MODE, 0, UserHandle.USER_CURRENT);
-        if (mTicker != null) {
-            mTicker.updateAnimation(mTickerAnimationMode);
-        }
-    }
-
-     private void updateTickerTickDuration() {
-        mTickerTickDuration = Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.STATUS_BAR_TICKER_TICK_DURATION, 3000, UserHandle.USER_CURRENT);
-        if (mTicker != null) {
-            mTicker.updateTickDuration(mTickerTickDuration);
-        }
-    }
-
     /**
      * Switches theme from light to dark and vice-versa.
      */
@@ -5475,7 +5459,6 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.LOCKSCREEN_CLOCK_SELECTION),
                     false, this, UserHandle.USER_ALL);
-            update();
         }
 
         @Override
@@ -5493,6 +5476,7 @@ public class StatusBar extends SystemUI implements DemoMode,
                    uri.equals(Settings.System.getUriFor(Settings.System.LOCKSCREEN_CLOCK_SELECTION))) {
                 updateKeyguardStatusSettings();
             }
+            update();
         }
 
         public void update() {
@@ -5500,6 +5484,22 @@ public class StatusBar extends SystemUI implements DemoMode,
             updateTickerAnimation();
             updateTickerTickDuration();
             updateKeyguardStatusSettings();
+        }
+    }
+
+    private void updateTickerAnimation() {
+        mTickerAnimationMode = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_TICKER_ANIMATION_MODE, 0, UserHandle.USER_CURRENT);
+        if (mTicker != null) {
+            mTicker.updateAnimation(mTickerAnimationMode);
+        }
+    }
+
+    private void updateTickerTickDuration() {
+        mTickerTickDuration = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_TICKER_TICK_DURATION, 3000, UserHandle.USER_CURRENT);
+        if (mTicker != null) {
+            mTicker.updateTickDuration(mTickerTickDuration);
         }
     }
 
