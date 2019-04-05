@@ -35,6 +35,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.Manifest;
 import android.net.NetworkInfo;
+import android.hardware.input.InputManager;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Handler;
@@ -134,6 +135,34 @@ public class PearlUtils {
             }
         }
     }
+
+
+    /**
+     * @hide
+     */
+    public static void sendKeycode(int keycode, Handler h) {
+        long when = SystemClock.uptimeMillis();
+        final KeyEvent evDown = new KeyEvent(when, when, KeyEvent.ACTION_DOWN, keycode, 0,
+                0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
+                KeyEvent.FLAG_FROM_SYSTEM,
+                InputDevice.SOURCE_KEYBOARD);
+        final KeyEvent evUp = KeyEvent.changeAction(evDown, KeyEvent.ACTION_UP);
+        h.post(new Runnable() {
+            @Override
+            public void run() {
+                InputManager.getInstance().injectInputEvent(evDown,
+                        InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
+            }
+        });
+        h.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputManager.getInstance().injectInputEvent(evUp,
+                        InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
+            }
+        }, 20);
+    }
+
         public static int getBlendColorForPercent(int fullColor, int emptyColor, boolean reversed,
                                               int percentage) {
         float[] newColor = new float[3];

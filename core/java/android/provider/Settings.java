@@ -4466,7 +4466,6 @@ public final class Settings {
                BOOLEAN_VALIDATOR;
 
         /**
-        /**
          * Wheter to show heads up only for dialer and sms apps
          * @hide
          */
@@ -4478,6 +4477,13 @@ public final class Settings {
          * @hide
          */
         public static final String ENABLE_GAMING_MODE = "enable_gaming_mode";
+
+
+         /**
+         * Whether to show VoLTE icon or not
+         * @hide
+         */
+         public static final String SHOW_VOLTE_ICON  ="volte_icon";
 
         /**
          * Allow all rotations.
@@ -4652,6 +4658,11 @@ public final class Settings {
         };
 
         /**
+         * @hide
+         */
+        public static final String USE_BOTTOM_GESTURE_NAVIGATION = "use_bottom_gesture_navigation";
+
+        /**
          * These are all public system settings
          *
          * @hide
@@ -4776,6 +4787,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(STATUS_BAR_TICKER_ANIMATION_MODE);
             PRIVATE_SETTINGS.add(STATUS_BAR_TICKER_TICK_DURATION);
             PRIVATE_SETTINGS.add(QS_TILE_STYLE);
+            PRIVATE_SETTINGS.add(USE_BOTTOM_GESTURE_NAVIGATION);
         }
 
         /**
@@ -12659,6 +12671,12 @@ public final class Settings {
          * @hide
          */
         public static final String SHOW_CPU_OVERLAY = "show_cpu_overlay";
+
+        /**
+         * Whether to show VoLTE icon or not
+         * @hide
+         */
+        public static final String SHOW_VOLTE_ICON = "volte_icon";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings

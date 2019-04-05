@@ -30,6 +30,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.internal.util.pearl.PearlUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.StatusIconDisplayable;
@@ -344,7 +345,7 @@ public class NetworkTraffic extends TextView implements StatusIconDisplayable {
     }
 
     private void updateVisibility() {
-        if (mIsEnabled && mTrafficVisible && mSystemIconVisible) {
+        if (!PearlUtils.hasNotch(mContext) && mIsEnabled && mTrafficVisible && mSystemIconVisible) {
             setVisibility(View.VISIBLE);
         } else {
             setVisibility(View.GONE);

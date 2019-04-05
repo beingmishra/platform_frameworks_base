@@ -47,6 +47,8 @@ import android.widget.TextView;
 
 import com.android.settingslib.Utils;
 import com.android.settingslib.graph.BatteryMeterDrawableBase;
+import com.android.systemui.aoscp.power.EnhancedEstimatesController;
+import com.android.systemui.aoscp.power.IEnhancedEstimates;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback;
@@ -61,19 +63,25 @@ import com.android.systemui.R;
 import java.text.NumberFormat;
 
 public class BatteryMeterView extends LinearLayout implements
-        BatteryStateChangeCallback, DarkReceiver, ConfigurationListener {
+        BatteryStateChangeCallback, Tunable, DarkReceiver, ConfigurationListener, IEnhancedEstimates {
 
     private BatteryMeterDrawableBase mDrawable;
     private ImageView mBatteryIconView;
     private final CurrentUserTracker mUserTracker;
     private TextView mBatteryPercentView;
     private static final String FONT_FAMILY = "sans-serif-medium";
+    private String mBatteryEstimate = null;
+
     private BatteryController mBatteryController;
     private SettingObserver mSettingObserver;
     private int mTextColor;
     private int mLevel;
+    private boolean mShowPercent;
     private boolean mForceShowPercent;
     private boolean mShowPercentAvailable;
+    private boolean mIgnoreTunerUpdates;
+    private boolean mIsSubscribedForTunerUpdates;
+    private boolean mCharging;
 
     private int mDarkModeBackgroundColor;
     private int mDarkModeFillColor;
@@ -139,6 +147,7 @@ public class BatteryMeterView extends LinearLayout implements
         mlp.setMargins(0, 0, 0,
                 getResources().getDimensionPixelOffset(R.dimen.battery_margin_bottom));
         addView(mBatteryIconView, mlp);
+        EnhancedEstimatesController.get(getContext()).setListener(this);
 
         mEndPadding = res.getDimensionPixelSize(R.dimen.battery_level_padding_start);
         updateShowPercent();
@@ -150,7 +159,11 @@ public class BatteryMeterView extends LinearLayout implements
             @Override
             public void onUserSwitched(int newUserId) {
                 mUser = newUserId;
-		mSettingObserver.update();
+                getContext().getContentResolver().unregisterContentObserver(mSettingObserver);
+                getContext().getContentResolver().registerContentObserver(
+                        Settings.System.getUriFor(SHOW_BATTERY_PERCENT), false, mSettingObserver,
+                        newUserId);
+                updateShowPercent();
             }
         };
 
@@ -161,6 +174,35 @@ public class BatteryMeterView extends LinearLayout implements
     public void setForceShowPercent(boolean show) {
         mForceShowPercent = show;
         updateShowPercent();
+    }
+
+    public void setIgnoreTunerUpdates(boolean ignore) {
+        mIgnoreTunerUpdates = ignore;
+        updateTunerSubscription();
+    }
+
+    private void updateTunerSubscription() {
+        if (mIgnoreTunerUpdates) {
+            unsubscribeFromTunerUpdates();
+        } else {
+            subscribeForTunerUpdates();
+        }
+    }
+
+    private void subscribeForTunerUpdates() {
+        if (!mIsSubscribedForTunerUpdates) {
+            if (!mIgnoreTunerUpdates) {
+                ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "icon_blacklist");
+                mIsSubscribedForTunerUpdates = true;
+            }
+        }
+    }
+
+    private void unsubscribeFromTunerUpdates() {
+        if (mIsSubscribedForTunerUpdates) {
+            ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
+            mIsSubscribedForTunerUpdates = false;
+        }
     }
 
     /**
@@ -215,6 +257,12 @@ public class BatteryMeterView extends LinearLayout implements
 	mSettingObserver.observe();
 	mSettingObserver.update();
         //updateShowPercent();
+        getContext().getContentResolver().registerContentObserver(
+                Settings.System.getUriFor(SHOW_BATTERY_PERCENT), false, mSettingObserver, mUser);
+        updateShowPercent();
+        subscribeForTunerUpdates();
+        Dependency.get(TunerService.class)
+                .addTunable(this, StatusBarIconController.ICON_BLACKLIST);
         Dependency.get(ConfigurationController.class).addCallback(this);
         mUserTracker.startTracking();
     }
@@ -238,6 +286,7 @@ public class BatteryMeterView extends LinearLayout implements
 	mCharging = pluggedIn;
         mDrawable.setBatteryLevel(level);
         mDrawable.setCharging(pluggedIn);
+        mCharging = pluggedIn;
         mLevel = level;
         updatePercentText();
         setContentDescription(
@@ -257,18 +306,25 @@ public class BatteryMeterView extends LinearLayout implements
         mDrawable.setPowerSave(isPowerSave);
     }
 
+    @Override
+    public void onBatteryRemainingEstimateRetrieved(String estimate) {
+        mBatteryEstimate = estimate;
+        updateShowPercent();
+    }
+
     private TextView loadPercentView() {
         return (TextView) LayoutInflater.from(getContext())
                 .inflate(R.layout.battery_percentage_view, null);
     }
 
     private void updatePercentText() {
-        Typeface tf = Typeface.create(FONT_FAMILY, Typeface.NORMAL);
-        if (mBatteryPercentView != null) {
-            CharSequence mChargeIndicator =
-                    mCharging && mStyle == BatteryMeterDrawableBase.BATTERY_STYLE_TEXT ? "~" : "";
-            mBatteryPercentView.setText(mChargeIndicator +
-                    NumberFormat.getPercentInstance().format(mLevel / 100f));
+        if (!(mBatteryController == null || mBatteryPercentView == null)) {
+            if (mShowPercent || mCharging) {
+                mBatteryPercentView.setText(
+                        NumberFormat.getPercentInstance().format(mLevel / 100f));
+            } else {
+                mBatteryPercentView.setText(mBatteryEstimate);
+            }
         }
     }
 
@@ -285,22 +341,20 @@ public class BatteryMeterView extends LinearLayout implements
     }
 
     private void updateShowPercent() {
-        final boolean showing = mBatteryPercentView != null;
-        if (forcePercentageQsHeader()
-                || ((mShowPercentText == 1) || mForceShowPercent)) {
-            if (!showing) {
-                mBatteryPercentView = loadPercentView();
-                if (mTextColor != 0) mBatteryPercentView.setTextColor(mTextColor);
-                updatePercentText();
-                addView(mBatteryPercentView,
-                        new ViewGroup.LayoutParams(
-                                LayoutParams.WRAP_CONTENT,
-                                LayoutParams.MATCH_PARENT));
-            }
+        mShowPercent = 0 != Settings.System
+                .getIntForUser(getContext().getContentResolver(),
+                SHOW_BATTERY_PERCENT, 0, mUser);
+
+        if ((mShowPercentAvailable && mShowPercent) || mForceShowPercent) {
+            createPercentView();
         } else {
-            if (showing) {
-                removeView(mBatteryPercentView);
-                mBatteryPercentView = null;
+            if (mBatteryEstimate != null) {
+                createPercentView();
+            } else {
+                if (mBatteryPercentView != null) {
+                    removeView(mBatteryPercentView);
+                    mBatteryPercentView = null;
+                }
             }
         }
         if (mBatteryPercentView != null) {
@@ -309,6 +363,18 @@ public class BatteryMeterView extends LinearLayout implements
         }
         mDrawable.showPercentInsideCircle(mShowPercentText == 2);
         mDrawable.setShowPercent(mShowPercentText == 2);
+    }
+
+    private void createPercentView() {
+        if (mBatteryPercentView == null) {
+            mBatteryPercentView = loadPercentView();
+            if (mTextColor != 0) mBatteryPercentView.setTextColor(mTextColor);
+            updatePercentText();
+            addView(mBatteryPercentView,
+                    new ViewGroup.LayoutParams(
+                            LayoutParams.WRAP_CONTENT,
+                            LayoutParams.MATCH_PARENT));
+        }
     }
 
     @Override

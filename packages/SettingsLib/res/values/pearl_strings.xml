@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
      Copyright (C) 2018 Project dotOS
+     Copyright 2019 CypherOS
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -21,4 +22,6 @@
     <!-- Description for the screen zoom level that makes interface elements smallest. [CHAR LIMIT=24] -->
     <string name="screen_zoom_summary_smallest">Smallest</string>
 
+    <!-- Power Discharge -->
+    <string name="power_discharge_by_only_short">Until %1$s</string>
 </resources>
