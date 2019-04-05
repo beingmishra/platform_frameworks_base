@@ -4909,6 +4909,9 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.LOCKSCREEN_CLOCK_SELECTION),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.DOUBLE_TAP_SLEEP_GESTURE),
+                    false, this, UserHandle.USER_ALL);
         }
 
     @Override
@@ -4937,6 +4940,7 @@ public class StatusBar extends SystemUI implements DemoMode,
            updateTickerAnimation();
            updateTickerTickDuration();
            updateKeyguardStatusSettings();
+           setStatusDoubleTapToSleep();
         }
     }
 
@@ -4955,6 +4959,12 @@ public class StatusBar extends SystemUI implements DemoMode,
                 Settings.System.LESS_BORING_HEADS_UP, 0,
                 UserHandle.USER_CURRENT) == 1;
         mEntryManager.setUseLessBoringHeadsUp(lessBoringHeadsUp);
+    }
+
+    private void setStatusDoubleTapToSleep() {
+        if (mStatusBarWindow != null) {
+            mStatusBarWindow.setStatusDoubleTapToSleep();
+        }
     }
 
     public int getWakefulnessState() {
