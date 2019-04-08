@@ -4089,6 +4089,12 @@ public final class Settings {
         public static final Validator SIP_ASK_ME_EACH_TIME_VALIDATOR = BOOLEAN_VALIDATOR;
 
         /**
+        * Whether to show media art on lockscreen
+        * @hide
+        */
+       public static final String LOCKSCREEN_MEDIA_METADATA = "lockscreen_media_metadata";
+
+        /**
          * Pointer speed setting.
          * This is an integer value in a range between -7 and +7, so there are 15 possible values.
          *   -7 = slowest
@@ -4477,7 +4483,6 @@ public final class Settings {
          * @hide
          */
         public static final String ENABLE_GAMING_MODE = "enable_gaming_mode";
-
 
          /**
          * Whether to show VoLTE icon or not
@@ -12671,12 +12676,6 @@ public final class Settings {
          * @hide
          */
         public static final String SHOW_CPU_OVERLAY = "show_cpu_overlay";
-
-        /**
-         * Whether to show VoLTE icon or not
-         * @hide
-         */
-        public static final String SHOW_VOLTE_ICON = "volte_icon";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
