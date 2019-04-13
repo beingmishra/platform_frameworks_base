@@ -97,6 +97,7 @@ public class KeyguardStatusView extends GridLayout implements
     private int mLastLayoutHeight;
 
     private boolean mShowClock;
+    private boolean mShowInfo;
     private int mClockSelection;
 
     private boolean mWasLatestViewSmall;
@@ -203,7 +204,7 @@ public class KeyguardStatusView extends GridLayout implements
         mOwnerInfo = findViewById(R.id.owner_info);
         mKeyguardSlice = findViewById(R.id.keyguard_status_area);
         mClockSeparator = findViewById(R.id.clock_separator);
-        mVisibleInDoze = Sets.newArraySet(mClockView, mKeyguardSlice, mCustomClockView, mDuClockView);
+        mVisibleInDoze = Sets.newArraySet(mClockView, mKeyguardSlice, mCustomClockView, mDuClockView, mTextClock);
         mTextColor = mClockView.getCurrentTextColor();
 
         int clockStroke = getResources().getDimensionPixelSize(R.dimen.widget_small_font_stroke);
@@ -450,23 +451,29 @@ public class KeyguardStatusView extends GridLayout implements
             default:
                 mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                        View.GONE) : View.VISIBLE);
+                mKeyguardSlice.setVisibility(mShowInfo ? View.VISIBLE : View.GONE);
                 mCustomClockView.setVisibility(View.GONE);
                 mDuClockView.setVisibility(View.GONE);
                 mTextClock.setVisibility(View.GONE);
+                mKeyguardSlice.setVisibility(mShowInfo ? View.VISIBLE : View.GONE);
                 break;
             case 1: // digital (bold)
                 mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                        View.GONE) : View.VISIBLE);
+                mKeyguardSlice.setVisibility(mShowInfo ? View.VISIBLE : View.GONE);
                 mCustomClockView.setVisibility(View.GONE);
                 mDuClockView.setVisibility(View.GONE);
                 mTextClock.setVisibility(View.GONE);
+                mKeyguardSlice.setVisibility(mShowInfo ? View.VISIBLE : View.GONE);
                 break;
             case 2: // custom analog
                 mCustomClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                        View.GONE) : View.VISIBLE);
+                mKeyguardSlice.setVisibility(mShowInfo ? View.VISIBLE : View.GONE);
                 mClockView.setVisibility(View.GONE);
                 mDuClockView.setVisibility(View.GONE);
                 mTextClock.setVisibility(View.GONE);
+                mKeyguardSlice.setVisibility(mShowInfo ? View.VISIBLE : View.GONE);
                 break;
             case 3: // du analog
                 mDuClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
@@ -478,22 +485,27 @@ public class KeyguardStatusView extends GridLayout implements
             case 4: // sammy
                 mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                        View.GONE) : View.VISIBLE);
+                mKeyguardSlice.setVisibility(mShowInfo ? View.VISIBLE : View.GONE);
                 mCustomClockView.setVisibility(View.GONE);
                 mDuClockView.setVisibility(View.GONE);
                 mTextClock.setVisibility(View.GONE);
+                mKeyguardSlice.setVisibility(mShowInfo ? View.VISIBLE : View.GONE);
                 break;
             case 5: // sammy (bold)
                 mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                        View.GONE) : View.VISIBLE);
+                mKeyguardSlice.setVisibility(mShowInfo ? View.VISIBLE : View.GONE);
                 mCustomClockView.setVisibility(View.GONE);
                 mDuClockView.setVisibility(View.GONE);
                 mTextClock.setVisibility(View.GONE);
+                mKeyguardSlice.setVisibility(mShowInfo ? View.VISIBLE : View.GONE);
                 break;
             case 6: // custom text clock
                 mTextClock.setVisibility(View.VISIBLE);
                 mClockView.setVisibility(View.GONE);
                 mCustomClockView.setVisibility(View.GONE);
                 mDuClockView.setVisibility(View.GONE);
+                mKeyguardSlice.setVisibility(View.GONE);
         }
     }
 
@@ -502,6 +514,8 @@ public class KeyguardStatusView extends GridLayout implements
 
         mShowClock = Settings.System.getIntForUser(resolver,
                 Settings.System.LOCKSCREEN_CLOCK, 1, UserHandle.USER_CURRENT) == 1;
+        mShowInfo = Settings.System.getIntForUser(resolver,
+                Settings.System.LOCKSCREEN_INFO, 1, UserHandle.USER_CURRENT) == 1;
         mClockSelection = Settings.System.getIntForUser(resolver,
                 Settings.System.LOCKSCREEN_CLOCK_SELECTION, 0, UserHandle.USER_CURRENT);
 
