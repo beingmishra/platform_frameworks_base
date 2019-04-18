@@ -22,5 +22,6 @@
     <string name="custom_text_clock_top_text_default">Il est</string>
     <string name="high_noon_first_row">Midi</string>
     <string name="high_noon_second_row">Haut</string>
+    <string name="twelve_am">Douze</string>
 
 </resources>

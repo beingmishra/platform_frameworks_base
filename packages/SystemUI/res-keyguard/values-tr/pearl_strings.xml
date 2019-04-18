@@ -22,5 +22,6 @@
     <string name="custom_text_clock_top_text_default">Saat</string>
     <string name="high_noon_first_row">Akşam üstü</string>
     <string name="high_noon_second_row">Öglen vakti</string>
+    <string name="twelve_am">On iki</string>
 
 </resources>
