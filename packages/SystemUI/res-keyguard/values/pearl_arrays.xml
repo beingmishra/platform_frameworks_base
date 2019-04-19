@@ -56,6 +56,13 @@
         <item>it</item>
         <item>pt</item>
         <item>fr</item>
+        <item>tr</item>
+        <item>cs</item>
+        <item>el</item>
+        <item>pl</item>
+        <item>ro</item>
+        <item>ru</item>
+        <item>th</item>
     </string-array>
 
 </resources>
