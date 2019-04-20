@@ -514,4 +514,6 @@
     <!-- Whether to show VoLTE icon in the status bar -->
     <bool name="config_display_volte">true</bool>
 
+    <!-- System icon area layout weight -->
+    <item name="system_icon_area_weight" format="float" type="integer">1</item>
 </resources>
