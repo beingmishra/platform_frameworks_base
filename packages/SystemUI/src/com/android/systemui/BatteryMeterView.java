@@ -176,7 +176,11 @@ public class BatteryMeterView extends LinearLayout implements
      *                                    components
      */
     public void useWallpaperTextColor(boolean shouldUseWallpaperTextColor) {
-        if (shouldUseWallpaperTextColor == mUseWallpaperTextColors) {
+        useWallpaperTextColor(shouldUseWallpaperTextColor, false);
+    }
+
+    public void useWallpaperTextColor(boolean shouldUseWallpaperTextColor, boolean force) {
+        if (!force && shouldUseWallpaperTextColor == mUseWallpaperTextColors) {
             return;
         }
 
@@ -420,8 +424,27 @@ public class BatteryMeterView extends LinearLayout implements
         }
     }
 
-    public void updateBatteryStyle() {
-        final int style = mStyle;
+    public void isQsbHeader() {
+        misQsbHeader = true;
+    }
+
+    public void setShowEstimate(boolean showEstimate) {
+        mShowEstimate = showEstimate;
+    }
+
+    private boolean alwaysShowPercentage() {
+        return getMeterStyle() == BatteryMeterDrawableBase.BATTERY_STYLE_TEXT
+                || (misQsbHeader
+                && (getMeterStyle() == BatteryMeterDrawableBase.BATTERY_STYLE_HIDDEN
+                || (getMeterStyle() != BatteryMeterDrawableBase.BATTERY_STYLE_HIDDEN
+                && mShowPercent == 0/*hidden*/)));
+    }
+
+    private void updateBatteryStyle(String styleStr) {
+        final int style = styleStr == null ?
+                BatteryMeterDrawableBase.BATTERY_STYLE_PORTRAIT : Integer.parseInt(styleStr);
+        mDrawable.setMeterStyle(style);
+        useWallpaperTextColor(mUseWallpaperTextColors, true);
 
         switch (style) {
             case BatteryMeterDrawableBase.BATTERY_STYLE_TEXT:
