@@ -87,6 +87,7 @@ public class MobileSignalController extends SignalController<
 
     private ImsManager mImsManager;
 
+    private boolean ignoreRSSNR = false;
 
     // TODO: Reduce number of vars passed in, if we have the NetworkController, probably don't
     // need listener lists anymore.
@@ -215,6 +216,19 @@ public class MobileSignalController extends SignalController<
         mContext.getContentResolver().registerContentObserver(Global.getUriFor(
                 Global.MOBILE_DATA + mSubscriptionInfo.getSubscriptionId()),
                 true, mObserver);
+        mContext.getContentResolver().registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.IGNORE_RSSNR),
+                    false /* notifyForDescendants */, 
+                    new ContentObserver(new Handler()) {
+                        @Override
+                        public void onChange(boolean selfChange) {
+                            boolean i = Settings.System.getIntForUser(mContext.getContentResolver(), Settings.System.IGNORE_RSSNR, 0, UserHandle.USER_CURRENT) == 1;
+                            if(i!=ignoreRSSNR){
+                                ignoreRSSNR = i;
+                                updateTelephony();
+                            }
+                        }
+                    });
        try {
            mImsManager.addRegistrationCallback(mImsRegistrationCallback);
        }catch(ImsException e){
@@ -544,7 +558,7 @@ public class MobileSignalController extends SignalController<
             if (!mSignalStrength.isGsm() && mConfig.alwaysShowCdmaRssi) {
                 mCurrentState.level = mSignalStrength.getCdmaLevel();
             } else {
-                mCurrentState.level = mSignalStrength.getLevel();
+                mCurrentState.level = mSignalStrength.getLevel(ignoreRSSNR);
             }
         }
         if (mNetworkToIconLookup.indexOfKey(mDataNetType) >= 0) {
@@ -606,7 +620,7 @@ public class MobileSignalController extends SignalController<
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             if (DEBUG) {
                 Log.d(mTag, "onSignalStrengthsChanged signalStrength=" + signalStrength +
-                        ((signalStrength == null) ? "" : (" level=" + signalStrength.getLevel())));
+                        ((signalStrength == null) ? "" : (" level=" + signalStrength.getLevel(ignoreRSSNR))));
             }
             mSignalStrength = signalStrength;
             updateTelephony();

@@ -4235,6 +4235,9 @@ public final class Settings {
         /** @hide */
         public static final Validator STATUSBAR_CLOCK_DATE_FORMAT_VALIDATOR = ANY_STRING_VALIDATOR;
 
+        /** @hide */
+        public static final String IGNORE_RSSNR = "ignore_rssnr";
+
         /**
          * IMPORTANT: If you add a new public settings you also have to add it to
          * PUBLIC_SETTINGS below. If the new setting is hidden you have to add
