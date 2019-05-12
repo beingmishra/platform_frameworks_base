@@ -16,6 +16,10 @@
 
 package com.android.internal.util.pearl;
 
+import android.renderscript.Element;
+import android.renderscript.Allocation;
+import android.renderscript.ScriptIntrinsicBlur; 
+import android.renderscript.RenderScript;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;

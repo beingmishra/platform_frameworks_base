@@ -89,6 +89,9 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
     private int mIconSize;
     private int mWeatherIconSize;
 
+    private boolean mShowInfo;
+    private boolean mRowAvailable;
+
     /**
      * Runnable called whenever the view contents change.
      */
@@ -132,6 +135,7 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         mTitle = findViewById(R.id.title);
         mRow = findViewById(R.id.row);
         mTextColor = Utils.getColorAttr(mContext, R.attr.wallpaperTextColor);
+        updateSettings();
     }
 
     @Override
@@ -149,6 +153,11 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
 
         mLiveData.removeObserver(this);
         Dependency.get(ConfigurationController.class).removeCallback(this);
+    }
+
+    public void updateSettings() {
+        mShowInfo = Settings.System.getIntForUser(getContext().getContentResolver(),
+                Settings.System.LOCKSCREEN_INFO, 1, UserHandle.USER_CURRENT) == 1;
     }
 
     private void showSlice() {
@@ -176,10 +185,6 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
                 subItems.add(subItem);
             }
         }
-
-        ContentResolver resolver = getContext().getContentResolver();
-        boolean showInfo = Settings.System.getIntForUser(resolver,
-                Settings.System.LOCKSCREEN_INFO, 1, UserHandle.USER_CURRENT) == 1;
 
         if (!mHasHeader) {
             mTitle.setVisibility(GONE);
@@ -322,6 +327,8 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         mRow.setDarkAmount(darkAmount);
         updateTextColors();
         showSlice();
+        mRow.setVisibility(mRowAvailable ? ((mShowInfo || mDarkAmount == 1) ? VISIBLE : GONE)
+                : GONE);
     }
 
     private void updateTextColors() {
