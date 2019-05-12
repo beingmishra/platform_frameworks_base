@@ -4485,6 +4485,12 @@ public final class Settings {
          */
         public static final String ENABLE_GAMING_MODE = "enable_gaming_mode";
 
+         /**
+         * Whether to show VoLTE icon or not
+         * @hide
+         */
+         public static final String SHOW_VOLTE_ICON  ="volte_icon";
+
         /**
          * Allow all rotations.
          * @hide
