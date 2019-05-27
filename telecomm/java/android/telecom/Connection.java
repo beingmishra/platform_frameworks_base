@@ -340,14 +340,6 @@ public abstract class Connection extends Conferenceable {
     public static final int CAPABILITY_SUPPORT_DEFLECT = 0x02000000;
 
     /**
-     * Add participant in an active or conference call option
-     *
-     * @hide
-     */
-    public static final int CAPABILITY_ADD_PARTICIPANT = 0x04000000;
-
-
-    /**
      * Remote device supports RTT.
      * @hide
      */
