@@ -28,12 +28,14 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Bundle;
 import android.os.UserManager;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -58,9 +60,12 @@ import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.statusbar.policy.UserInfoController;
 import com.android.systemui.statusbar.policy.UserInfoController.OnUserInfoChangedListener;
 import com.android.systemui.tuner.TunerService;
+import android.media.MediaPlayer;
+
+import static android.content.Context.VIBRATOR_SERVICE;
 
 public class QSFooterImpl extends FrameLayout implements QSFooter,
-        OnClickListener, OnUserInfoChangedListener {
+        OnClickListener, OnLongClickListener,OnUserInfoChangedListener {
 
     private ActivityStarter mActivityStarter;
     private UserInfoController mUserInfoController;
@@ -92,9 +97,14 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
     private final int mColorForeground;
     private OnClickListener mExpandClickListener;
 
+    private Vibrator my_vibrator;
+
+    private Toast mTapToast;
+
     public QSFooterImpl(Context context, AttributeSet attrs) {
         super(context, attrs);
         mColorForeground = Utils.getColorAttr(context, android.R.attr.colorForeground);
+	my_vibrator = (Vibrator) getContext().getSystemService(VIBRATOR_SERVICE);
     }
 
     @Override
@@ -111,12 +121,14 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
         mSettingsButton = findViewById(R.id.settings_button);
         mSettingsContainer = findViewById(R.id.settings_button_container);
         mSettingsButton.setOnClickListener(this);
+	mSettingsButton.setOnLongClickListener(this);
 
         mMultiUserSwitch = findViewById(R.id.multi_user_switch);
         mMultiUserAvatar = mMultiUserSwitch.findViewById(R.id.multi_user_avatar);
 
         mDragHandle = findViewById(R.id.qs_drag_handle_view);
         mActionsContainer = findViewById(R.id.qs_footer_actions_container);
+
 
         // RenderThread is doing more harm than good when touching the header (to expand quick
         // settings), so disable it for this view
@@ -319,6 +331,18 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
                             : MetricsProto.MetricsEvent.ACTION_QS_COLLAPSED_SETTINGS_LAUNCH);
             startSettingsActivity();
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+	final MediaPlayer dn = MediaPlayer.create (mContext, R.raw.bou);
+        if (v == mSettingsButton) {
+	   dn.start();
+           my_vibrator.vibrate(70);
+           mTapToast = Toast.makeText(getContext(),"Keep Volume to medium and enjoy",Toast.LENGTH_SHORT);
+	   mTapToast.show();
+        }
+        return false;
     }
 
     private void startSettingsActivity() {
