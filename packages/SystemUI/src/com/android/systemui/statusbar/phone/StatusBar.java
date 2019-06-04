@@ -676,7 +676,6 @@ public class StatusBar extends SystemUI implements DemoMode,
     private VibratorHelper mVibratorHelper;
 
     private boolean mLockscreenMediaMetadata;
-    private int mCurrentTheme;
 
     @Override
     public void start() {
@@ -2266,17 +2265,6 @@ public class StatusBar extends SystemUI implements DemoMode,
         return themeInfo != null && themeInfo.isEnabled();
     }
 
-
-    public boolean isUsingSonyTheme() {
-        OverlayInfo themeInfo = null;
-        try {
-            themeInfo = mOverlayManager.getOverlayInfo("com.android.systemui.theme.sony",
-                    mLockscreenUserManager.getCurrentUserId());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return themeInfo != null && themeInfo.isEnabled();
-    }
 
     @Nullable
     public View getAmbientIndicationContainer() {
@@ -4271,61 +4259,32 @@ public class StatusBar extends SystemUI implements DemoMode,
         updateNewTileStyle(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), qsTileStyle);
      }
 
-    private void getCurrentThemeSetting() {
-        mCurrentTheme = Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.SYSTEM_THEME_STYLE, 0, mLockscreenUserManager.getCurrentUserId());
-    }
-
-    boolean useSonyTheme = false;
 
     /**
      * Switches theme from light to dark and vice-versa.
      */
     protected void updateTheme() {
         final boolean inflated = mStackScroller != null && mStatusBarWindowManager != null;
+        final UiModeManager umm = mContext.getSystemService(UiModeManager.class);
 
         haltTicker();
 
         // The system wallpaper defines if QS should be light or dark.
-        if (mCurrentTheme == 0) {
-            // The system wallpaper defines if QS should be light or dark.
-            WallpaperColors systemColors = mColorExtractor
-                    .getWallpaperColors(WallpaperManager.FLAG_SYSTEM);
-            boolean wallpaperWantsDarkTheme = systemColors != null
-                    && (systemColors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_THEME) != 0;
-            Configuration config = mContext.getResources().getConfiguration();
-            boolean nightModeWantsDarkTheme = DARK_THEME_IN_NIGHT_MODE
-                    && (config.uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                        == Configuration.UI_MODE_NIGHT_YES;
-            useDarkTheme = wallpaperWantsDarkTheme || nightModeWantsDarkTheme;
-        } else {
-            useDarkTheme = mCurrentTheme == 2;
-	    useSonyTheme = mCurrentTheme == 3;
-        }
-        if (mCurrentTheme == 1) {
-            mUiOffloadThread.submit(() -> {
-            umm.setNightMode(UiModeManager.MODE_NIGHT_NO);
-            });
-        }
+        WallpaperColors systemColors = mColorExtractor
+                .getWallpaperColors(WallpaperManager.FLAG_SYSTEM);
+        final boolean wallpaperWantsDarkTheme = systemColors != null
+                && (systemColors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_THEME) != 0;
+        final Configuration config = mContext.getResources().getConfiguration();
+        final boolean nightModeWantsDarkTheme = DARK_THEME_IN_NIGHT_MODE
+                && (config.uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                    == Configuration.UI_MODE_NIGHT_YES;
+        final boolean useDarkTheme = nightModeWantsDarkTheme;
 
         if (isUsingDarkTheme() != useDarkTheme) {
-            final boolean useDark = useDarkTheme;
             mUiOffloadThread.submit(() -> {
                 try {
                     mOverlayManager.setEnabled("com.android.systemui.theme.dark",
                             useDarkTheme, mLockscreenUserManager.getCurrentUserId());
-                } catch (RemoteException e) {
-                    Log.w(TAG, "Can't change theme", e);
-                }
-            });
-        }
-
-        if (isUsingSonyTheme() != useSonyTheme) {
-            final boolean useDark = useSonyTheme;
-            mUiOffloadThread.submit(() -> {
-                try {
-                    mOverlayManager.setEnabled("com.android.settings.theme.sony",
-                            useSonyTheme, mLockscreenUserManager.getCurrentUserId());
                 } catch (RemoteException e) {
                     Log.w(TAG, "Can't change theme", e);
                 }
@@ -5023,9 +4982,7 @@ public class StatusBar extends SystemUI implements DemoMode,
 
          void observe() {
             ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.SYSTEM_THEME_STYLE),
-                    false, this, UserHandle.USER_ALL);
+
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_LOCKSCREEN),
                     false, this, UserHandle.USER_ALL);
@@ -5074,10 +5031,6 @@ public class StatusBar extends SystemUI implements DemoMode,
            if (uri.equals(Settings.System.getUriFor(
                     Settings.System.LESS_BORING_HEADS_UP))) {
                 setUseLessBoringHeadsUp();
-            } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.SYSTEM_THEME_STYLE))) {
-                getCurrentThemeSetting();
-                updateTheme();
             } else if (uri.equals(Settings.System.getUriFor(
                 Settings.System.STATUS_BAR_TICKER_ANIMATION_MODE))) {
                 updateTickerAnimation();
