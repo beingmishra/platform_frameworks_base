@@ -4648,6 +4648,15 @@ public final class Settings {
          */
         public static final String SHOW_FOURG_ICON = "show_fourg_icon";
 
+
+        /**
+         * 0 - wallpaper based
+         * 1 - force dark
+         * 2 - force sony
+         * @hide
+         */
+        public static final String SYSTEM_THEME_STYLE = "system_theme_style";
+
          /**
           * Volume dialog timeout
           * @hide
