@@ -66,6 +66,7 @@
         android:layout_height="match_parent"
         android:visibility="invisible" />
 
+    <include layout="@layout/clock_mirror"/>
     <include layout="@layout/brightness_mirror" />
 
     <com.android.systemui.statusbar.ScrimView

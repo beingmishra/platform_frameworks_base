@@ -43,20 +43,24 @@ public class BrightnessMirrorController
     private final ArraySet<BrightnessMirrorListener> mBrightnessMirrorListeners = new ArraySet<>();
     private final int[] mInt2Cache = new int[2];
     private View mBrightnessMirror;
+    private View mClockMirror;
 
     public BrightnessMirrorController(StatusBarWindowView statusBarWindow,
             @NonNull Consumer<Boolean> visibilityCallback) {
         mStatusBarWindow = statusBarWindow;
         mBrightnessMirror = statusBarWindow.findViewById(R.id.brightness_mirror);
+        mClockMirror = statusBarWindow.findViewById(R.id.clock_mirror);
         mNotificationPanel = statusBarWindow.findViewById(R.id.notification_panel);
         mNotificationPanel.setPanelAlphaEndAction(() -> {
             mBrightnessMirror.setVisibility(View.INVISIBLE);
+            mClockMirror.setVisibility(View.INVISIBLE);
         });
         mVisibilityCallback = visibilityCallback;
     }
 
     public void showMirror() {
         mBrightnessMirror.setVisibility(View.VISIBLE);
+        mClockMirror.setVisibility(View.VISIBLE);
         mVisibilityCallback.accept(true);
         mNotificationPanel.setPanelAlpha(0, true /* animate */);
     }
@@ -76,10 +80,15 @@ public class BrightnessMirrorController
         mBrightnessMirror.setTranslationX(0);
         mBrightnessMirror.setTranslationY(0);
         mBrightnessMirror.getLocationInWindow(mInt2Cache);
+        mClockMirror.setTranslationX(0);
+        mClockMirror.setTranslationY(0);
+        mClockMirror.getLocationInWindow(mInt2Cache);
         int mirrorX = mInt2Cache[0] + mBrightnessMirror.getWidth() / 2;
         int mirrorY = mInt2Cache[1] + mBrightnessMirror.getHeight() / 2;
         mBrightnessMirror.setTranslationX(originalX - mirrorX);
         mBrightnessMirror.setTranslationY(originalY - mirrorY);
+        mClockMirror.setTranslationX(originalX - mirrorX);
+        mClockMirror.setTranslationY(originalY - mirrorY);
     }
 
     public View getMirror() {
