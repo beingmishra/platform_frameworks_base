@@ -4765,6 +4765,13 @@ public final class Settings {
         };
 
         /**
+         * Whether to display the torch option in the power menu
+         *
+         * @hide
+         */
+        public static final String POWERMENU_TORCH = "powermenu_torch";
+
+        /**
          * These are all public system settings
          *
          * @hide
