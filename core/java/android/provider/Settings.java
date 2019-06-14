@@ -4678,6 +4678,16 @@ public final class Settings {
          */
         public static final String VOLUME_ROCKER_WAKE = "volume_rocker_wake";
 
+	/**
+         * @hide
+         */
+        public static final String SMART_CHARGING = "smart_charging";
+
+        /**
+         * @hide
+         */
+        public static final String SMART_CHARGING_LEVEL = "smart_charging_level";
+
        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
@@ -6647,6 +6657,7 @@ public final class Settings {
                     }
                 };
 
+      
         /**
          * If touch exploration is enabled.
          */
@@ -12807,8 +12818,8 @@ public final class Settings {
          */
         public static final String SHOW_CPU_OVERLAY = "show_cpu_overlay";
 
-        /**
-         * Settings to backup. This is here so that it's in the same place as the settings
+
+        /** Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
          * These keys may be mentioned in the SETTINGS_TO_BACKUP arrays in System
