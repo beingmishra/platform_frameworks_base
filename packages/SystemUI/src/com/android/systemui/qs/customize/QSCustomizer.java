@@ -72,6 +72,7 @@ public class QSCustomizer extends LinearLayout implements OnMenuItemClickListene
     private final QSDetailClipper mClipper;
     private final LightBarController mLightBarController;
     private final TileQueryHelper mTileQueryHelper;
+    private final View mQsCustomizerTopSpace;
 
     private boolean isShown;
     private QSTileHost mHost;
@@ -153,6 +154,7 @@ public class QSCustomizer extends LinearLayout implements OnMenuItemClickListene
         animator.setMoveDuration(TileAdapter.MOVE_DURATION);
         mRecyclerView.setItemAnimator(animator);
         mLightBarController = Dependency.get(LightBarController.class);
+        mQsCustomizerTopSpace = findViewById(R.id.qs_customizer_top_space);
         updateNavBackDrop(getResources().getConfiguration());
     }
 
@@ -160,6 +162,12 @@ public class QSCustomizer extends LinearLayout implements OnMenuItemClickListene
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         updateNavBackDrop(newConfig);
+
+        // Update top space height in orientation change
+        mQsCustomizerTopSpace.getLayoutParams().height =
+                mContext.getResources().getDimensionPixelSize(
+                        com.android.internal.R.dimen.quick_qs_offset_height);
+        mQsCustomizerTopSpace.setLayoutParams(mQsCustomizerTopSpace.getLayoutParams());
     }
 
     private void updateNavBackDrop(Configuration newConfig) {
