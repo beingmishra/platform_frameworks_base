@@ -105,6 +105,7 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
         if (isUserLocationRestricted(currentUserId)) {
             return false;
         }
+        final ContentResolver cr = mContext.getContentResolver();
         // When enabling location, a user consent dialog will pop up, and the
         // setting won't be fully enabled until the user accepts the agreement.
         Settings.Secure.putIntForUser(cr, Settings.Secure.LOCATION_MODE, mode,
