@@ -47,12 +47,6 @@ public class LocationTile extends QSTileImpl<BooleanState> {
     private final LocationController mController;
     private final KeyguardMonitor mKeyguard;
     private final Callback mCallback = new Callback();
-    private final AnimationIcon mEnable =
-            new AnimationIcon(R.drawable.ic_signal_location_enable_animation,
-                    R.drawable.ic_signal_location_disable);
-    private final AnimationIcon mDisable =
-            new AnimationIcon(R.drawable.ic_signal_location_disable_animation,
-                    R.drawable.ic_signal_location_enable);
 
     public LocationTile(QSHost host) {
         super(host);
